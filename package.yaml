@@ -1,0 +1,57 @@
+name: labels
+version: '0.1.0.0'
+author: Viktor Kleen
+maintainer: viktor@kleen.org
+copyright: 2018 Viktor Kleen
+license: BSD3
+github: vkleen/labels
+default-extensions:
+    - NoImplicitPrelude
+    - BangPatterns
+    - ConstraintKinds
+    - DataKinds
+    - DefaultSignatures
+    - DeriveFoldable
+    - DeriveFunctor
+    - DeriveGeneric
+    - DeriveLift
+    - DeriveTraversable
+    - EmptyCase
+    - ExistentialQuantification
+    - FlexibleContexts
+    - FlexibleInstances
+    - FunctionalDependencies
+    - GADTs
+    - GeneralizedNewtypeDeriving
+    - InstanceSigs
+    - KindSignatures
+    - LambdaCase
+    - MultiParamTypeClasses
+    - MultiWayIf
+    - NamedFieldPuns
+    - OverloadedStrings
+    - PatternSynonyms
+    - RankNTypes
+    - ScopedTypeVariables
+    - StandaloneDeriving
+    - TupleSections
+    - TypeApplications
+    - TypeFamilies
+    - TypeFamilyDependencies
+    - TypeOperators
+ghc-options:
+    - -Wall
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+dependencies:
+    - base
+    - protolude
+    - lens
+executables:
+    labels:
+        main: Main.hs
+        source-dirs: src
+        other-modules:
+          - CustomPrelude
+          - Paths_labels
