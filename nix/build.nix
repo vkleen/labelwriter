@@ -1,26 +1,28 @@
-{ pkgs ? import (import ./fetch-nixpkgs.nix) {}, compiler ? "ghc842" }:
+{ pkgs-func ? import (import ./fetch-nixpkgs.nix), compiler ? "ghc843" }:
 
-with pkgs.lib; with pkgs.haskell.lib;
 let
-  pkgsMake = import ./pkgs-make {
-    origNixpkgs = pkgs;
-    haskellArgs = {
-      ghcVersion = compiler;
-      overrides = pkgs: self: super: {
-        integer-logarithms = doJailbreak super.integer-logarithms;
-      };
-    };
+  overlays = [];
+  pkgs = pkgs-func {
+    inherit overlays;
   };
-in pkgsMake ({call, lib} :
-  let
-    modifiedHaskellCall = f:
-      lib.nix.composed [
-        lib.haskell.enableLibraryProfiling
-        lib.haskell.doHaddock
-        f
-      ];
-    haskellLib = modifiedHaskellCall call.haskell.lib;
-    haskellApp = modifiedHaskellCall call.haskell.app;
-  in rec {
-    labels = haskellApp ../.;
-  })
+in with pkgs.lib; with pkgs.haskell.lib;
+let
+  stdhsPackages = pkgs.haskell.packages."${compiler}".extend (self: super: {
+#    pipes-text = doJailbreak super.pipes-text;
+#    streamly = self.callHackage "streamly" "0.4.1" {};
+    base-noprelude = self.callHackage "base-noprelude" "4.11.1.0" {};
+  });
+  haskellPackages = stdhsPackages.extend (packageSourceOverrides {
+    labels = ../labels;
+    prelude = ../prelude;
+  });
+in rec {
+  inherit (haskellPackages) labels prelude;
+  shell = haskellPackages.shellFor {
+    packages = p: with p; [ labels prelude ];
+    withHoogle = true;
+    buildInputs = with haskellPackages; [
+      cabal2nix cabal-install ghcid stylish-haskell hpack hlint
+    ];
+  };
+}

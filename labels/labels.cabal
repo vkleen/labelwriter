@@ -1,0 +1,32 @@
+name:           labels
+version:        0.1.0.0
+homepage:       https://github.com/vkleen/labels#readme
+bug-reports:    https://github.com/vkleen/labels/issues
+author:         Viktor Kleen
+maintainer:     viktor@kleen.org
+copyright:      2018 Viktor Kleen
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+cabal-version:  >= 1.10
+
+source-repository head
+  type: git
+  location: https://github.com/vkleen/labels
+
+executable labels
+  main-is: Main.hs
+  other-modules:
+      Types
+    , Paths_labels
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base-noprelude >=4.11  && <4.12
+    , prelude
+    , lens
+    , primitive
+    , repa
+    , vector
+  default-language: Haskell2010

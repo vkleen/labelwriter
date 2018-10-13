@@ -1,1 +1,1 @@
-(import ./nix/build.nix {})
+(import ./nix/build.nix {}).labels
