@@ -26,7 +26,10 @@ let
     gloss-raster     = self.callCabal2nix "gloss-raster" ../nih/gloss/gloss-raster {};
     gloss-rendering  = self.callCabal2nix "gloss-rendering" ../nih/gloss/gloss-rendering {};
     prelude          = self.callCabal2nix "prelude" ../prelude {};
-    labels           = addBuildDepend (self.callCabal2nix "labels" ../labels {}) pkgs.llvm;
+    labels           = composed [
+                         (enable "devel")
+                         (drv: addBuildDepend drv pkgs.llvm)
+                       ] (self.callCabal2nixWithOptions "labels" ../labels "-fdevel" {});
   });
 in rec {
   inherit (haskellPackages) labels prelude;

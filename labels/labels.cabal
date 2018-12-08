@@ -14,10 +14,16 @@ source-repository head
   type: git
   location: https://github.com/vkleen/labels
 
+flag devel
+    default: False
+    description: Enable development dependencies
+    manual: True
+
 executable labels
   main-is: Main.hs
   other-modules:
-      Types
+      DevelMain
+    , Types
     , Data.Bits.Utils
     , Data.Pixel
     , Data.Vector.Unboxed.Pixel
@@ -36,3 +42,6 @@ executable labels
     , gloss
     , gloss-raster
   default-language: Haskell2010
+
+  if flag(devel)
+     build-depends: rapid
