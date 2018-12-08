@@ -20,8 +20,13 @@ let
     #                  super.gloss;
   });
   haskellPackages = stdhsPackages.extend (self: super: {
-    prelude = self.callCabal2nix "prelude" ../prelude {};
-    labels = addBuildDepend (self.callCabal2nix "labels" ../labels {}) pkgs.llvm;
+    gloss            = self.callCabal2nix "gloss" ../nih/gloss/gloss {};
+    gloss-algorithms = self.callCabal2nix "gloss-algorithms" ../nih/gloss/gloss-algorithms {};
+    gloss-examples   = self.callCabal2nix "gloss-examples" ../nih/gloss/gloss-examples {};
+    gloss-raster     = self.callCabal2nix "gloss-raster" ../nih/gloss/gloss-raster {};
+    gloss-rendering  = self.callCabal2nix "gloss-rendering" ../nih/gloss/gloss-rendering {};
+    prelude          = self.callCabal2nix "prelude" ../prelude {};
+    labels           = addBuildDepend (self.callCabal2nix "labels" ../labels {}) pkgs.llvm;
   });
 in rec {
   inherit (haskellPackages) labels prelude;
