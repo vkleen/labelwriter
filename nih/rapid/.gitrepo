@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:esoeylemez/rapid.git
+	branch = master
+	commit = aae24ba82ef9972b10fb3cfd57049d844d521750
+	parent = b0de910d5d264e514c64fc1af0fe1681aa197a2c
+	cmdver = 0.3.1
