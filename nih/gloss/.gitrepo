@@ -1,0 +1,11 @@
+; DO NOT EDIT (unless you know what you are doing)
+;
+; This subdirectory is a git "subrepo", and this file is maintained by the
+; git-subrepo command. See https://github.com/git-commands/git-subrepo#readme
+;
+[subrepo]
+	remote = git@github.com:benl23x5/gloss.git
+	branch = master
+	commit = 695da1761dc8fed611cfb3cb1da0ed9e8f923e6c
+	parent = 444423c29076ad7b8edb0bdcb584b4a78f39d4c2
+	cmdver = 0.3.1
