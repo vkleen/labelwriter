@@ -1,8 +1,8 @@
 packages:
-    ./nih/gloss
-    ./nih/gloss-algorithms
-    ./nih/gloss-examples
-    ./nih/gloss-raster
-    ./nih/gloss-rendering
+    ./nih/gloss/gloss
+    ./nih/gloss/gloss-algorithms
+    ./nih/gloss/gloss-examples
+    ./nih/gloss/gloss-raster
+    ./nih/gloss/gloss-rendering
     ./labels
     ./prelude

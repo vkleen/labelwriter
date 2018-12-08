@@ -19,9 +19,10 @@ import System.IO.Unsafe
 -- global variables. Unfortunately, there is no failsafe way to check
 -- whether glut is initialized in some older versions of glut, which is
 -- what we'd use instead of the global variable to get the required info.
-glutInitialized :: IORef Bool
-{-# NOINLINE glutInitialized #-}
-glutInitialized = unsafePerformIO $ do newIORef False
+glutInitialized :: IO Bool
+glutInitialized = get GLUT.initState
+-- {-# NOINLINE glutInitialized #-}
+-- glutInitialized = unsafePerformIO $ do newIORef False
 
 -- | State information for the GLUT backend.
 data GLUTState
@@ -51,7 +52,8 @@ instance Backend GLUTState where
         initializeBackend          = initializeGLUT
 
         -- non-freeglut doesn't like this: (\_ -> GLUT.leaveMainLoop)
-        exitBackend                = (\_ -> System.exitWith System.ExitSuccess)
+        -- exitBackend                = (\_ -> System.exitWith System.ExitSuccess)
+        exitBackend                = (\_ -> GLUT.leaveMainLoop)
 
         openWindow                 = openWindowGLUT
         dumpBackendState           = dumpStateGLUT
@@ -59,7 +61,8 @@ instance Backend GLUTState where
 
         -- We can ask for this in freeglut, but it doesn't seem to work :(.
         -- (\_ -> GLUT.actionOnWindowClose $= GLUT.MainLoopReturns)
-        installWindowCloseCallback = (\_ -> return ())
+        -- installWindowCloseCallback = (\_ -> return ())
+        installWindowCloseCallback = (\_ -> GLUT.actionOnWindowClose $= GLUT.MainLoopReturns)
 
         installReshapeCallback     = installReshapeCallbackGLUT
         installKeyMouseCallback    = installKeyMouseCallbackGLUT
@@ -93,7 +96,7 @@ initializeGLUT
         -> IO ()
 
 initializeGLUT _ debug
-  = do initialized <- readIORef glutInitialized
+  = do initialized <- glutInitialized
        if not initialized
          then do  (_progName, _args)  <- GLUT.getArgsAndInitialize
                   glutVersion         <- get GLUT.glutVersion
@@ -104,7 +107,7 @@ initializeGLUT _ debug
                     $= [ GLUT.RGBMode
                        , GLUT.DoubleBuffered]
 
-                  writeIORef glutInitialized True
+                  -- writeIORef glutInitialized True
 
                   -- See if our requested display mode is possible
                   displayMode         <- get GLUT.initialDisplayMode
