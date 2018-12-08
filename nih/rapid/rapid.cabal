@@ -38,11 +38,11 @@ source-repository head
 
 library
     build-depends:
-        async == 2.1.*,
-        base >= 4.8 && < 4.11,
-        containers == 0.5.*,
-        foreign-store == 0.2.*,
-        stm == 2.4.*
+        async,
+        base,
+        containers,
+        foreign-store,
+        stm
     default-language: Haskell2010
     ghc-options: -W
     exposed-modules:

@@ -4,5 +4,6 @@ packages:
     ./nih/gloss/gloss-examples
     ./nih/gloss/gloss-raster
     ./nih/gloss/gloss-rendering
+    ./nih/rapid
     ./labels
     ./prelude

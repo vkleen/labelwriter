@@ -25,6 +25,7 @@ let
     gloss-examples   = self.callCabal2nix "gloss-examples" ../nih/gloss/gloss-examples {};
     gloss-raster     = self.callCabal2nix "gloss-raster" ../nih/gloss/gloss-raster {};
     gloss-rendering  = self.callCabal2nix "gloss-rendering" ../nih/gloss/gloss-rendering {};
+    rapid            = self.callCabal2nix "rapid" ../nih/rapid {};
     prelude          = self.callCabal2nix "prelude" ../prelude {};
     labels           = composed [
                          (enable "devel")
