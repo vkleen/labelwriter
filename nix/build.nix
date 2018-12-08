@@ -1,20 +1,27 @@
-{ pkgs-func ? import (import ./fetch-nixpkgs.nix), compiler ? "ghc843" }:
+{ pkgs-func ? import (import ./fetch-nixpkgs.nix), compiler ? "ghc844" }:
 
 let
   overlays = [];
   pkgs = pkgs-func {
     inherit overlays;
   };
+  composed = builtins.foldl' (a: acc: b: a (acc b)) (a: a);
 in with pkgs.lib; with pkgs.haskell.lib;
 let
+  enable = x: drv: enableCabalFlag drv x;
+  disable = x: drv: disableCabalFlag drv x;
   stdhsPackages = pkgs.haskell.packages."${compiler}".extend (self: super: {
-#    pipes-text = doJailbreak super.pipes-text;
-#    streamly = self.callHackage "streamly" "0.4.1" {};
     base-noprelude = self.callHackage "base-noprelude" "4.11.1.0" {};
+    # gloss wants GLFW <2 :-(
+    # gloss = composed [ (enable "GLFW")
+    #                    (disable "GLUT")
+    #                    (drv: addBuildDepend drv [self.GLFW-b])
+    #                  ]
+    #                  super.gloss;
   });
-  haskellPackages = stdhsPackages.extend (packageSourceOverrides {
-    labels = ../labels;
-    prelude = ../prelude;
+  haskellPackages = stdhsPackages.extend (self: super: {
+    prelude = self.callCabal2nix "prelude" ../prelude {};
+    labels = addBuildDepend (self.callCabal2nix "labels" ../labels {}) pkgs.llvm;
   });
 in rec {
   inherit (haskellPackages) labels prelude;
