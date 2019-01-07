@@ -2,3 +2,4 @@
 dist*
 **/result
 .dir-locals.el
+/cabal.project.local

@@ -23,24 +23,52 @@ executable labels
   main-is: Main.hs
   other-modules:
       DevelMain
-    , Types
     , Data.Bits.Utils
-    , Data.Pixel
-    , Data.Vector.Unboxed.Pixel
+    , Data.LWPixel
+    , Data.Vector.Unboxed.LWPixel
+    , Display
+    , Display.Shaders
     , Paths_labels
+    , Types
   hs-source-dirs:
       src
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N -Odph -fno-liberate-case -funfolding-use-threshold1000 -funfolding-keeness-factor1000 -fllvm -optlo-O3
+  ghc-options: -Wall
+               -Wno-name-shadowing
+               -threaded -rtsopts
+               -with-rtsopts=-N
+               -Odph
+               -fno-liberate-case
+               -funfolding-use-threshold1000
+               -funfolding-keeness-factor1000
+               -fllvm
+               -optlo-O3
   build-depends:
       base-noprelude >=4.11  && <4.12
-    , prelude
+    , GLFW-b
+    , JuicyPixels
+    , bytestring
+    , colour
+    , diagrams-contrib
+    , diagrams-core
+    , singletons
+    , type-level-sets
+    , either
+    , superrecord
+    , diagrams-lib
+    , diagrams-rasterific
+    , fused-effects
+    , gl
+    , gloss
     , lens
+    , lens
+    , prelude
     , primitive
+    , raw-strings-qq
     , repa
     , repa-algorithms
+    , resourcet
+    , text
     , vector
-    , gloss
-    , gloss-raster
   default-language: Haskell2010
 
   if flag(devel)

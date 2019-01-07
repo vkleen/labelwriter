@@ -7,3 +7,5 @@ packages:
     ./nih/rapid
     ./labels
     ./prelude
+
+optimization: 2

@@ -31,7 +31,7 @@ nWords n = divWordSize (n + wordSize - 1)
 
 -- number of bits storable in n words
 nBits :: Int -> Int
-nBits n = mulWordSize n
+nBits = mulWordSize
 
 aligned, notAligned :: Int -> Bool
 aligned    x = (x .&. wordSizeMask == 0)

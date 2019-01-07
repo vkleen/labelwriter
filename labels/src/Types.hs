@@ -1,15 +1,8 @@
-{-# LANGUAGE TemplateHaskell #-}
 module Types where
 
-import           Data.Pixel
-import qualified Data.Vector.Unboxed as U
-import qualified Data.Vector.Unboxed.Pixel ()
-import           Control.Lens
+import           Data.LWPixel
+import qualified Data.Vector.Unboxed.LWPixel ()
+import Data.Array.Repa
 
-data Image = Image
-  { _width    :: {-# UNPACK #-} !Int
-  , _height   :: {-# UNPACK #-} !Int
-  , _contents :: U.Vector Pixel
-  }
-
-makeLenses ''Image
+type Image r = Array r DIM2 Bool
+type PackedImage r = Array r DIM2 LWPixel

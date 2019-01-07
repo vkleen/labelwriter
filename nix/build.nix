@@ -20,7 +20,7 @@ let
     #                  super.gloss;
   });
   haskellPackages = stdhsPackages.extend (self: super: {
-    gloss            = self.callCabal2nix "gloss" ../nih/gloss/gloss {};
+    gloss            = self.callCabal2nixWithOptions "gloss" ../nih/gloss/gloss "-fGLUT" {};
     gloss-algorithms = self.callCabal2nix "gloss-algorithms" ../nih/gloss/gloss-algorithms {};
     gloss-examples   = self.callCabal2nix "gloss-examples" ../nih/gloss/gloss-examples {};
     gloss-raster     = self.callCabal2nix "gloss-raster" ../nih/gloss/gloss-raster {};
@@ -33,9 +33,9 @@ let
                        ] (self.callCabal2nixWithOptions "labels" ../labels "-fdevel" {});
   });
 in rec {
-  inherit (haskellPackages) labels prelude;
+  inherit (haskellPackages) labels prelude gloss;
   shell = haskellPackages.shellFor {
-    packages = p: with p; [ labels prelude ];
+    packages = p: with p; [ labels prelude gloss ];
     withHoogle = true;
     buildInputs = with haskellPackages; [
       cabal2nix cabal-install ghcid stylish-haskell hpack hlint

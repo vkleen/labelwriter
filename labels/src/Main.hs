@@ -1,5 +1,6 @@
-{-# language OverloadedStrings #-}
 module Main where
 
+import DevelMain
+
 main :: IO ()
-main = putText "Hello World!"
+main = pure ()
