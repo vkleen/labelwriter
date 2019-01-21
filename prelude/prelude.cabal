@@ -17,7 +17,7 @@ library
   exposed-modules:     Prelude
   -- other-modules:
   -- other-extensions:
-  build-depends:       base-noprelude >=4.11 && <4.12,
+  build-depends:       base-noprelude,
                        protolude
   hs-source-dirs:      src
   default-language:    Haskell2010

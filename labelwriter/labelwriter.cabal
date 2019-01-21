@@ -1,10 +1,10 @@
-name:           labels
+name:           labelwriter
 version:        0.1.0.0
-homepage:       https://github.com/vkleen/labels#readme
-bug-reports:    https://github.com/vkleen/labels/issues
+homepage:       https://github.com/vkleen/labelwriter#readme
+bug-reports:    https://github.com/vkleen/labelwriter/issues
 author:         Viktor Kleen
 maintainer:     viktor@kleen.org
-copyright:      2018 Viktor Kleen
+copyright:      2019 Viktor Kleen
 license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
@@ -12,14 +12,14 @@ cabal-version:  >= 1.10
 
 source-repository head
   type: git
-  location: https://github.com/vkleen/labels
+  location: https://github.com/vkleen/labelwriter
 
 flag devel
     default: False
     description: Enable development dependencies
     manual: True
 
-executable labels
+executable labelwriter
   main-is: Main.hs
   other-modules:
       DevelMain
@@ -28,7 +28,9 @@ executable labels
     , Data.Vector.Unboxed.LWPixel
     , Display
     , Display.Shaders
-    , Paths_labels
+    , Display.ShaderStages
+    , Display.Pipeline
+    , Paths_labelwriter
     , Types
   hs-source-dirs:
       src
@@ -36,14 +38,14 @@ executable labels
                -Wno-name-shadowing
                -threaded -rtsopts
                -with-rtsopts=-N
-               -Odph
                -fno-liberate-case
                -funfolding-use-threshold1000
                -funfolding-keeness-factor1000
                -fllvm
+               -O2
                -optlo-O3
   build-depends:
-      base-noprelude >=4.11  && <4.12
+      base-noprelude
     , GLFW-b
     , JuicyPixels
     , bytestring

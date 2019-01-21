@@ -17,15 +17,14 @@ module Display.Shaders ( CompileError(..)
                        , TesselationEvaluationShader, pattern TesselationEvaluationShader
                        , GeometryShader, pattern GeometryShader
                        , FragmentShader, pattern FragmentShader
+                       , Shader'(..)
                        , ShaderStage(..)
                        , compile
                        ) where
 
 import qualified Data.Text as T
 import qualified Data.Text.Foreign as T
-import Data.Text.Strict.Lens (utf8)
-import Control.Lens.Operators ((#), (??))
-import qualified Data.ByteString.Char8 as B
+import Control.Lens.Operators ((??))
 import qualified Foreign as F
 import qualified Graphics.GL.Core45 as GL
 import qualified Graphics.GL.Types as GL
@@ -49,7 +48,7 @@ fromShaderStage Geometry              = GL.GL_GEOMETRY_SHADER
 fromShaderStage Fragment              = GL.GL_FRAGMENT_SHADER
 
 shaderKindEnum :: forall (k :: ShaderStage). SingI k => GL.GLenum
-shaderKindEnum = (fromShaderStage . fromSing) (sing @ShaderStage @k)
+shaderKindEnum = (fromShaderStage . fromSing) (sing @k)
 
 type VertexShader = Shader' 'Vertex
 pattern VertexShader :: GL.GLuint -> VertexShader
@@ -78,28 +77,31 @@ pattern FragmentShader s = Shader' { _handle = s, _uniforms = () }
 
 genericCompile :: GL.GLenum -> T.Text -> IO (Either CompileError GL.GLuint)
 genericCompile t src = do
-  shaderId <- B.useAsCString (utf8 # src) $ \src ->
-    F.withArray [src] $ \srcs ->
-      GL.glCreateShaderProgramv t 1 srcs
+  shaderId <- GL.glCreateShader t
+  T.withCStringLen src $ \(str, len) ->
+    F.withArray [str] $ \strs ->
+    F.withArray [fromIntegral len] $ \lens ->
+      GL.glShaderSource shaderId 1 strs lens
+  GL.glCompileShader shaderId
   validate shaderId
   where
     validate :: GL.GLuint -> IO (Either CompileError GL.GLuint)
     validate 0 = pure . Left $ CompileError "Could not allocate a shader object from OpenGL"
     validate x = do
       success <- F.alloca $ \successP -> do
-        GL.glGetProgramiv x GL.GL_LINK_STATUS successP
+        GL.glGetShaderiv x GL.GL_COMPILE_STATUS successP
         F.peek successP
       logLength <- F.alloca $ \lenP -> do
-        GL.glGetProgramiv x GL.GL_INFO_LOG_LENGTH lenP
+        GL.glGetShaderiv x GL.GL_INFO_LOG_LENGTH lenP
         F.peek lenP
       logText <- F.allocaBytes (fromIntegral logLength) $ \logP ->
         F.alloca $ \resultP -> do
-          GL.glGetProgramInfoLog x logLength resultP logP
+          GL.glGetShaderInfoLog x logLength resultP logP
           result <- fromIntegral <$> F.peek resultP
           T.peekCStringLen (logP, result)
       if success == GL.GL_TRUE
         then pure . Right $ x
-        else GL.glDeleteProgram x >> (pure . Left $ CompileError logText)
+        else GL.glDeleteShader x >> (pure . Left $ CompileError logText)
 
 compile :: forall k. SingI k => ShaderSource -> IO (Either CompileError (Shader' k))
 compile (ShaderSource src) = fmap (Shader' ?? ()) <$>
