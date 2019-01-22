@@ -27,9 +27,9 @@ executable labelwriter
     , Data.LWPixel
     , Data.Vector.Unboxed.LWPixel
     , Display
-    , Display.Shaders
-    , Display.ShaderStages
-    , Display.Pipeline
+    , Display.GL.Shaders
+    , Display.GL.ShaderStages
+    , Display.GL.Pipeline
     , Paths_labelwriter
     , Types
   hs-source-dirs:
@@ -52,23 +52,21 @@ executable labelwriter
     , colour
     , diagrams-contrib
     , diagrams-core
-    , singletons
-    , type-level-sets
-    , either
-    , superrecord
     , diagrams-lib
     , diagrams-rasterific
+    , either
+    , fixed-vector
     , fused-effects
     , gl
     , gloss
-    , lens
     , lens
     , prelude
     , primitive
     , raw-strings-qq
     , repa
     , repa-algorithms
-    , resourcet
+    , safe-exceptions
+    , singletons
     , text
     , vector
   default-language: Haskell2010

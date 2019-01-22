@@ -1,3 +1,4 @@
+{-# LANGUAGE PolyKinds #-}
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE UndecidableInstances #-}
 {-# LANGUAGE TypeOperators #-}
@@ -11,35 +12,34 @@
 {-# OPTIONS -Wno-unused-top-binds #-}
 {-# OPTIONS -Wno-unticked-promoted-constructors #-}
 
-module Display.ShaderStages ( ShaderStage(..)
-                            , ValidStages
-                            ) where
+module Display.GL.ShaderStages ( ShaderStage(..)
+                               , ValidStages
+                               ) where
 
 import Prelude hiding (Set, TypeError, Text)
-import Data.Type.Set
 
-import GHC.TypeLits
 import Data.Singletons.Prelude
 import Data.Singletons.TH
+import GHC.TypeLits
 
 data ShaderStage = Vertex
                  | TesselationControl
                  | TesselationEvaluation
                  | Geometry
                  | Fragment
-  deriving (Show, Eq, Ord)
+  deriving (Show, Eq, Ord, Bounded, Enum)
 
 genSingletons [''ShaderStage]
 promoteEqInstance ''ShaderStage
 promoteOrdInstance ''ShaderStage
+promoteBoundedInstance ''ShaderStage
+promoteEnumInstance ''ShaderStage
 
-type instance Cmp (a :: ShaderStage) (b :: ShaderStage) = Compare a b
-
-type family TCImpliesTE x :: Bool where
-  TCImpliesTE x = Not (MemberP 'TesselationControl x) || MemberP 'TesselationEvaluation x
+type family TCImpliesTE (x :: [ShaderStage]) :: Bool where
+  TCImpliesTE x = Not (Elem 'TesselationControl x) || Elem 'TesselationEvaluation x
 
 type family ValidStages (stages :: [ShaderStage]) :: Constraint where
-  ValidStages stages = ValidStagesImpl stages (MemberP 'Vertex stages) (TCImpliesTE stages)
+  ValidStages stages = ValidStagesImpl stages (Elem 'Vertex stages) (TCImpliesTE stages)
 
 type family ValidStagesImpl (stages :: [ShaderStage])
                             (hasVertex :: Bool)

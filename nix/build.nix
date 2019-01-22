@@ -34,6 +34,7 @@ in rec {
     withHoogle = true;
     buildInputs = with haskellPackages; [
       cabal2nix cabal-install ghcid stylish-haskell hpack hlint
+      ghc-core
     ];
   };
 }

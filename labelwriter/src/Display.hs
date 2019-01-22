@@ -16,8 +16,6 @@ import Data.Array.Repa as Repa
 import Data.Array.Repa.Eval as Repa
 import Data.Array.Repa.Repr.ForeignPtr as Repa
 
-import Data.Coerce (coerce)
-
 import qualified Control.Lens as L
 import Control.Lens.Operators
 
@@ -30,8 +28,6 @@ import qualified Foreign as F
 import qualified Graphics.GL.Core45 as GL
 import qualified Graphics.GL.Types as GL
 import qualified Graphics.UI.GLFW as GLFW
-
-import Display.Shaders
 
 data GraphicsResources = GraphicsResources { _vao              :: GL.GLuint
                                            , _program          :: GL.GLuint
@@ -193,11 +189,6 @@ showImage' img = do
             [ GL.GL_DEBUG_SEVERITY_NOTIFICATION, GL.GL_DEBUG_SEVERITY_LOW
             , GL.GL_DEBUG_SEVERITY_MEDIUM, GL.GL_DEBUG_SEVERITY_HIGH
             ]
-
-  compile (ShaderSource vertexShader)
-    >>= either (putErrText.coerce) (\(VertexShader x) -> GL.glDeleteProgram x)
-  compile (ShaderSource fragmentShader)
-    >>= either (putErrText.coerce) (\(FragmentShader x) -> GL.glDeleteProgram x)
 
   ms <- runExceptT $ setup screenImg
   (ms & either putErrLn
